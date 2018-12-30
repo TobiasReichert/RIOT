@@ -30,6 +30,11 @@
 #include "at86rf2xx_params.h"
 #endif
 
+#ifdef MODULE_KW2XRF
+#include "kw2xrf.h"
+#include "kw2xrf_params.h"
+#endif
+
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
@@ -37,8 +42,16 @@
 #define OPENTHREAD_NETIF_NUMOF        (sizeof(at86rf2xx_params) / sizeof(at86rf2xx_params[0]))
 #endif
 
+#ifdef MODULE_KW2XRF     /* is mutual exclusive with above ifdef */
+#define OPENTHREAD_NETIF_NUMOF        (sizeof(kw2xrf_params) / sizeof(kw2xrf_params[0]))
+#endif
+
 #ifdef MODULE_AT86RF2XX
 static at86rf2xx_t at86rf2xx_dev;
+#endif
+
+#ifdef MODULE_KW2XRF
+static kw2xrf_t kw2xrf_dev;
 #endif
 
 static uint8_t rx_buf[OPENTHREAD_NETDEV_BUFLEN];
@@ -54,6 +67,11 @@ void openthread_bootstrap(void)
 #ifdef MODULE_AT86RF2XX
     at86rf2xx_setup(&at86rf2xx_dev, &at86rf2xx_params[0]);
     netdev_t *netdev = (netdev_t *) &at86rf2xx_dev;
+#endif
+
+#ifdef MODULE_KW2XRF
+    kw2xrf_setup(&kw2xrf_dev, &kw2xrf_params[0]);
+    netdev_t *netdev = (netdev_t *) &kw2xrf_dev;
 #endif
 
     openthread_radio_init(netdev, tx_buf, rx_buf);

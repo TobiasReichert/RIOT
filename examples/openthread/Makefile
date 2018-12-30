@@ -4,7 +4,7 @@ APPLICATION = openthread
 BOARD ?= samr21-xpro
 
 # These are the boards that OpenThread stack has been tested on
-BOARD_WHITELIST := samr21-xpro iotlab-m3 fox iotlab-a8-m3
+BOARD_WHITELIST := samr21-xpro iotlab-m3 fox iotlab-a8-m3 pba-d-01-kw2x
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
@@ -38,6 +38,9 @@ ifneq (,$(filter samr21-xpro,$(BOARD)))
 endif
 ifneq (,$(filter iotlab-m3 fox iotlab-a8-m3,$(BOARD)))
   DRIVER := at86rf231
+endif
+ifneq (,$(filter pba-d-01-kw2x,$(BOARD)))
+   DRIVER := kw2xrf
 endif
 
 USEMODULE += $(DRIVER)
